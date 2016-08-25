@@ -1,3 +1,38 @@
+*2016.08.07 09:10:52 code
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/launch.sh
+/c/public/sortable_list/sortable_list.py
+/c/public/moments/moments/path.py
+/c/public/sortable_list/gaze.py
+/c/public/sortable_list/web/application.py
+
+*2016.08.07 09:10:58 views
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/web/templates/footer.tpl
+/c/public/sortable_list/web/templates/entries.tpl
+/c/public/sortable_list/web/templates/navigation.tpl
+/c/public/sortable_list/web/templates/site.tpl
+/c/public/sortable_list/web/templates/home.tpl
+/c/public/sortable_list/web/templates/sort.tpl
+/c/public/sortable_list/web/templates/image.tpl
+/c/public/sortable_list/web/templates/image_tiny.tpl
+/c/public/sortable_list/web/templates/series_summary.tpl
+/c/public/medley/server/js/people.js
+/c/public/sortable_list/web/templates/editor.tpl
+/c/public/sortable_list/web/templates/layout.tpl
+/c/public/sortable_list/web/templates/header.tpl
+/c/public/sortable_list/web/templates/summary.tpl
+/c/public/sortable_list/web/templates/collection.tpl
+/c/public/sortable_list/web/css/style.css
+
+*2016.08.07 08:54:52 todo
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/launch.sh
+/c/public/sortable_list/.gitignore
+/c/public/sortable_list/README.md
+/c/public/sortable_list/journal.txt
+/c/public/sortable_list/todo.txt
+
 *2016.07.30 15:43:31 code
 /c/public/sortable_list/instances.txt
 /c/public/sortable_list/launch.sh

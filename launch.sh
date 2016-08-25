@@ -24,5 +24,13 @@ python application.py
 
 #browser:
 http://localhost:8888/
+
+https://github.com/charlesbrandt/sortable_list
+charlesbrandt/sortable_list
+http://bottlepy.org/docs/dev/index.html
+Bottle: Python Web Framework — Bottle 0.13-dev documentation
+https://rubaxa.github.io/Sortable/
+Sortable. No jQuery.
+
 "
 
