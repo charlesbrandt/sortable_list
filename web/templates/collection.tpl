@@ -35,7 +35,6 @@
     <script type="application/javascript">
      var path = "{{ path }}";
     </script>
-    %#<script src="/js/dragdrop.js"></script>
     <script src="/js/Sortable.min.js"></script>
     <script src="/js/main.js"></script>
     

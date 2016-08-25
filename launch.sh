@@ -17,6 +17,7 @@ launch.py -c $ROOT code
 
 echo "Other common options:
 launch.py -c $ROOT todo
+launch.py -c $ROOT views
 
 #terminal:
 cd web/

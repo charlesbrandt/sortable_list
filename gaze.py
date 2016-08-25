@@ -47,6 +47,8 @@ def scan_directory(path, sl, contents):
     """
     helper function...
     might need to do this in different places
+
+    generate a generic, JSON safe, common object representation for everything
     """
     #verify the sent path.type == directory
     assert path.type() == "Directory"
