@@ -6,7 +6,6 @@
   <title>sortable</title>
   %end
 
-  %#include header description='', keywords='', author=''
   % description=''
   % keywords=''
   % author=''
@@ -31,7 +30,7 @@
   <link rel="alternate" href="" title="RSS Feed" type="application/rss+xml" />
 
   <!-- JavaScript
-  <script src="/js/interact.min.js"></script>
+  <script src=""></script>
   -->
   
   <script type="application/javascript">  

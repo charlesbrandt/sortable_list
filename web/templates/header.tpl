@@ -18,8 +18,8 @@
   <link rel="alternate" href="" title="RSS Feed" type="application/rss+xml" />
 
   <!-- JavaScript
+  <script src=""></script>
   -->
 
-  <script src="/js/interact.min.js"></script>
 
 

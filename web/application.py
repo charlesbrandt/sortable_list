@@ -1,28 +1,18 @@
 #!/usr/bin/env python
 """
-Pose server that uses a separate server to access journal data
-that way journal data does not need to be reloaded every time server restarts
-
-does make startup more complex:
+Help handle backend processes for storing sortable list results
 
 separate tab:
-cd /c/moments/moments
-python journal_server.py /c/journal
-
-python application-split.py
+cd /c/public/sortable_list/web
+python application.py 
 """
 
-import sys, os, re, codecs
-import urllib, urllib2
-
-#redefine standard python range:
-pyrange = range
+import sys, os, re
 
 from bottle import static_file, redirect
 from bottle import get, post, request
 from bottle import route, run
 from bottle import template
-
 
 
 #DO NOT USE THIS IN PRODUCTION!!
@@ -50,20 +40,8 @@ except:
         print "No json module found"
         exit()
         
-from moments.log import Log
 from moments.path import Path
-from moments.tag import Tags
-from moments.association import Association
-from moments.journal import Journal
-from moments.timestamp import Timerange
-
-from moments.journal import RemoteJournal
-
 from moments.launch import edit, file_browse
-
-from mindstream.cloud import Cloud
-#from moments.mindstream import Mindstream
-
 
 server = bottle.Bottle()
 
@@ -100,9 +78,9 @@ def js_static(filename):
     js_path = os.path.join(server_root, 'js')
     return static_file(filename, root=js_path)
 
-@server.route('/images/:filename#.+#')
+@server.route('/img/:filename#.+#')
 def images_static(filename):
-    image_path = os.path.join(server_root, 'images')
+    image_path = os.path.join(server_root, 'img')
     return static_file(filename, root=image_path)
   
  
@@ -328,13 +306,8 @@ if __name__ == '__main__':
             host = sys.argv[1]
 
     print "Path root: %s" % path_root
-
     
-    #port = 8088
     #start the server loop
-    #run(host='localhost', port=8088)
-    #run(app=server, host='localhost', port=port)
     #reloader=True enables Auto Reloading
-    #run(host=configs['host'], port=configs['port'], reloader=True)
     #run(app=server, host='localhost', port=port, reloader=True)
     run(app=server, host=host, port=port, reloader=True)

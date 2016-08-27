@@ -35,6 +35,11 @@
     <script type="application/javascript">
      var path = "{{ path }}";
     </script>
+    <script src="/js/vex.combined.min.js"></script>
+    <script>vex.defaultOptions.className = 'vex-theme-wireframe'</script>
+    <link rel="stylesheet" href="/css/vex.css" />
+    <link rel="stylesheet" href="/css/vex-theme-wireframe.css" />
+
     <script src="/js/Sortable.min.js"></script>
     <script src="/js/main.js"></script>
     

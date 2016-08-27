@@ -21,6 +21,8 @@ body {
     display: inline-block;
     margin: 0;
     width: 150px;
+    height: 150px;
+    vertical-align: top;
     /*width:500px;
     margin-left:auto;
     margin-right:auto;
@@ -29,6 +31,19 @@ body {
     float: left;
    */
 }
+
+.guide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: left;
+    opacity: 0;
+}
+
+.guide:hover {
+    opacity: .25;
+}
+
 
 .handle {
     position: absolute;
@@ -39,7 +54,7 @@ body {
     text-align: left;
 }
 
-.expand {
+.modal {
     position: absolute;
     top: 50%;
     left: 0;

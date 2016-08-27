@@ -107,4 +107,34 @@ var sortable = Sortable.create(el, {
 
 });
 
+
+var modals = document.getElementsByClassName('modal');
+
+var modal_helper = function(evt) {
+  (evt.target);
+  #returns HTMLCollection
+  var html_collection = document.getElementsByClassName('item');
+  #convert that to a standard array to get access to indexOf
+  var items = [].slice.call(html_collection);
+  
+  var cur_item = evt.target.parentElement.parentElement;
+  console.log(items.indexOf(cur_item));
+  vex.dialog.open({
+    unsafeMessage: '<img src="/image/' + evt.target.getAttribute('image-data') + '">',
+    input: [
+      'fields',
+    ].join(''),
+    callback: function (data) {
+      if (!data) {
+        return console.log('Cancelled');
+      }
+      console.log(data);
+    }
+    
+  })
+}
+
+for (var i = 0; i < modals.length; i++) {
+  modals[i].addEventListener('click', modal_helper, false);
+}
 //console.log("Made it here!");
