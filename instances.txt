@@ -1,3 +1,11 @@
+*2016.08.25 18:57:13 todo
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/launch.sh
+/c/public/sortable_list/.gitignore
+/c/public/sortable_list/README.md
+/c/alpha/sortable_list/todo.txt
+/c/alpha/sortable_list/journal.txt
+
 *2016.08.25 18:07:00 code
 /c/public/sortable_list/instances.txt
 /c/public/sortable_list/launch.sh

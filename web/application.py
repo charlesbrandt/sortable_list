@@ -76,34 +76,9 @@ server = bottle.Bottle()
 ignores = []
 
 port = 8888
-path_root = '/c/moments/tests/'
-path_root = "/c/binaries/journal/2010/"
-path_root = "/c/"
+path_root = "/path/to/some/safe/location/"
+#this is not a safe path, but it's convenient
 path_root = "/"
-
-if len(sys.argv) > 1:
-    helps = ['--help', 'help', '-h']
-    for i in helps:
-        if i in sys.argv:
-            print "python application.py [directory to load]"
-            exit()
-
-    ports = ['--port', '-p']
-    for p in ports:
-        if p in sys.argv:
-            i = sys.argv.index(p)
-            sys.argv.pop(i)
-            port = sys.argv.pop(i)
-
-    proots = ['--root', '-r', '-c', '--context']
-    for p in proots:
-        if p in sys.argv:
-            i = sys.argv.index(p)
-            sys.argv.pop(i)
-            path_root = sys.argv.pop(i)
-
-
-print "Path root: %s" % path_root
 
 
 # ROUTES
@@ -155,285 +130,6 @@ def launch_path(source=''):
 
 #to force a download, use the following:
 #    return static_file(filename, root='/path/to/static/files', download=filename)
-
-
-def load_groups(full_source):
-    """
-    allows for custom editing of json files if needed
-    """
-    groups = []
-    if not os.path.exists(full_source):
-        #to get original version started
-        #collections.scenes should have been loaded already
-        #and star_order calculated
-
-        raise ValueError, "No order file: %s" % full_source
-
-        #comment this out if you want to initialize a list from scratch:
-        #groups = [ self.scenes.star_order, [], [], [], [], [], [], [], [], [], [], ]
-    else:
-        #destination = "order.txt"
-        json_file = codecs.open(full_source, 'r', encoding='utf-8', errors='ignore')
-        lines = json_file.readlines()
-        #split up the object so it is easier to edit
-        split = ''
-        for line in lines:
-            line = line.replace(',]', ']')
-            line = line.replace(', ]', ']')
-            split += line.strip() + ' '
-
-        #split = json_file.read()
-        #split.replace('\r\n', '')
-        #split.replace('\r', '')
-        #split.replace('\n', '')
-        #print split
-        try:
-            groups = json.loads(split)
-        except:
-            #try to pinpoint where the error is occurring:
-            print split
-
-            #get rid of outer list:
-            split = split[1:-1]
-            parts = split.split('], ')
-            assert len(parts) == 11
-            count = 0
-            for p in parts:
-                p = p + ']'
-                try:
-                    group = json.loads(p)
-                except:
-                    new_p = p[1:-1]
-                    tags = new_p.split('", "')
-                    summary = ''
-                    for tag in tags:
-                        summary += tag + "\n"
-
-                    #print count
-                    #print summary
-                    print "%s - %s" % (count, summary)
-                    #raise ValueError, "Trouble loading JSON in part %s: %s" % (count, p)
-                    raise ValueError, "Trouble loading JSON in part %s: %s" % (count, summary)
-                count += 1
-
-
-            #raise ValueError, "Trouble loading JSON: %s" % split
-        json_file.close()
-        #groups = load_json(destination)
-
-    return groups
-
-
-def save_groups(destination, ordered_list):
-    """
-    similar to save json, but custom formatting to make editing easier
-
-    to load, use collection.load_groups
-    
-    """
-    #print "Saving: %s" % ordered_list
-    #print "To: %s" % destination
-    #journal = merge_simple(ordered_list, cloud_file)
-
-    json_file = codecs.open(destination, 'w', encoding='utf-8', errors='ignore')
-    #print "JSON FILE OPEN"
-    split = json.dumps(ordered_list)
-    split = split.replace('], ', ', ], \n')
-    split = split.replace(']]', ', ]]')
-    #print "Split version: %s" % split
-    json_file.write(split)
-    json_file.close()    
-        
-
-@server.post('/save_tabs/:relative#.+#')
-@server.post('/save_tabs/')
-@server.post('/save_tabs')
-def save_tabs(relative=''):
-    global path_root
-
-    if re.match('~', relative):
-        relative = os.path.expanduser(relative)
-
-    if not relative:
-        #could set a default here if it is desireable
-        print "NO DESTINATION SENT!"
-    elif not re.match('/', relative):
-        relative = path_root + relative
-
-    
-    #destination = Path(relative, relative_prefix=path_root)
-    destination = relative
-
-    #print destination
-    
-    #debug:
-    #print dir(request.forms)
-    #print "Keys: %s" % (request.forms.keys())
-    #print "Values: %s" % (request.forms.values())
-    
-    #gets a string
-    cloud    = request.forms.get('cloud')
-    #gets a list
-    #cloud    = request.forms.getlist('cloud[]')
-    
-    #print cloud
-    ordered_list = json.loads(cloud)
-
-    #print ordered_list
-
-    #save_json(destination, ordered_list)
-    save_groups(destination, ordered_list)
-    
-    #d = open(destination, 'w')
-    #d.write(' '.join(ordered_list))
-    
-    #return "Name: %s, Password: %s" % (name, password)
-    return "Success!"
-
-@server.route('/sort/:relative#.+#')
-def sort(relative=''):
-    """
-    accept a path to a moment log and enable sorting on the items
-    using jquery ui for a drag and drop interface
-    """
-    global path_root
-
-    if re.match('~', relative):
-        relative = os.path.expanduser(relative)
-    if not re.match('/', relative):
-        relative = path_root + relative
-
-    #set some defaults here...
-    #if they've been changed, this will get over written on load
-    groups = { "all":[], "edit":[], "slide1":[], "slide2":[], "slide3":[], "slide4":[], "slide5":[], "slide6":[], "slide7":[], "slide8":[], "slide9":[], }
-
-    tab_order = ['all', 'edit', "slide1", "slide2", "slide3", "slide4", "slide5", "slide6", "slide7", "slide8", "slide9"]
-
-    path = Path(relative, relative_prefix=path_root)
-    print path
-    if path.exists() and path.type() == "Directory":
-        response = "Error: need a file name to store the meta data in<br>"
-        response = "You supplied a directory path: %s<br>" % path
-        return response
-    else:
-        parent_directory = path.parent()
-        if path.extension == ".txt":
-            #create a text journal if we don't have one
-            if not path.exists():
-                #convert images to journal
-                #print "PARENT: %s" % parent_directory
-                directory = parent_directory.load()
-                #print "directory: %s, of type: %s" % (directory, type(directory))
-                directory.create_journal(journal=path.filename)
-                #journal = path.load_journal(create=True)
-
-            journal = path.load_journal()
-            items = []
-            for e in journal.entries():
-                new_p = os.path.join(str(parent_directory), e.data.strip())
-                #print new_p
-                p = Path(new_p)
-                #print p.exists()
-                items.append(p)
-
-            #initial version of groups:
-            destination = Path(relative)
-            destination.extension = '.json'
-
-            groups['all'] = items
-            
-        elif path.extension == ".json":
-            #we can make the initial version here...
-            #skip the generation of a moments log step
-            if not path.exists():
-                directory = parent_directory.load()
-                #print "directory: %s, of type: %s" % (directory, type(directory))
-                directory.sort_by_date()
-                directory.scan_filetypes()
-                
-                groups['all'] = directory.images
-                
-            else:
-                loaded = load_groups(str(path))
-                #template expects all items in groups to be Path objects.
-                #do that now
-                groups = {}
-                for key, value in loaded.items():
-                    groups[key] = []
-                    for v in value:
-                        groups[key].append(Path(v))
-            
-            destination = Path(relative)
-
-        else:
-            #dunno!
-            print "UNKNOWN FILE TYPE: %s" % relative
-            groups = {}
-            destination = None
-
-        #clean up tab_order as needed
-        for key in groups.keys():
-            if not key in tab_order:
-                tab_order.append(key)
-        for item in tab_order[:]:
-            if item not in groups.keys():
-                tab_order.remove(item)
-
-        print tab_order
-        
-        #return template('sort', path=path, items=items)
-        return template('sort', path=path, groups=groups, destination=destination, tab_order=tab_order)
-    
-@server.route('/series/:type/:relative#.+#')
-@server.route('/series/:relative#.+#')
-@server.route('/series/')
-@server.route('/series')
-def series(type="Image", relative=''):
-    """
-    show the current item in a series
-    along with links to previous and next
-    """
-    global path_root
-
-    if re.match('~', relative):
-        relative = os.path.expanduser(relative)
-    if not re.match('/', relative):
-        relative = os.path.join(path_root, relative)
-
-    path = Path(relative, relative_prefix=path_root)
-    if path.type() != "Directory":
-        parent = path.parent()
-        parent_dir = parent.load()
-        #parent_dir.sort_by_date()
-        parent_dir.sort_by_path()
-        parent_dir.scan_filetypes()
-        if path.type() == "Image":
-            count = 0
-            position = None
-            for i in parent_dir.images:
-                if str(i) == str(path):
-                    position = count
-                    break
-                count += 1
-
-            if position is None:
-                raise ValueError, "Couldn't find matching image in directory: %s" % str(parent)
-            else:
-                if position != 0:
-                    prev_pos = position-1
-                else:
-                    prev_pos = 0
-                previous = parent_dir.images[prev_pos]
-
-                nexts = []
-                next_len = 5
-                end = position + next_len
-                if end >= len(parent_dir.images):
-                    nexts = parent_dir.images[position+1:]
-                else:
-                    nexts = parent_dir.images[position+1:end]
-
-                return template('series', path=path, parent=parent, previous=previous, nexts=nexts)
 
 
 @server.post('/save/:relative#.+#')
@@ -591,11 +287,54 @@ def now(relative=''):
 def index():
     global path_root
     return template('home', path_root=path_root)
+
+if __name__ == '__main__':
+    #default host:
+    host = "localhost"
     
-#port = 8088
-#start the server loop
-#run(host='localhost', port=8088)
-#run(app=server, host='localhost', port=port)
-#reloader=True enables Auto Reloading
-#run(host=configs['host'], port=configs['port'], reloader=True)
-run(app=server, host='localhost', port=port, reloader=True)
+    if len(sys.argv) > 1:
+        helps = ['--help', 'help', '-h']
+        for i in helps:
+            if i in sys.argv:
+                print "python application.py --context [directory to load] [address]"
+                exit()
+
+        proots = ['--root', '-r', '-c', '--context']
+        for p in proots:
+            if p in sys.argv:
+                i = sys.argv.index(p)
+                sys.argv.pop(i)
+                path_root = sys.argv.pop(i)
+                sys.argv.pop(i)
+
+        ports = ['--port', '-p']
+        for p in ports:
+            if p in sys.argv:
+                i = sys.argv.index(p)
+                sys.argv.pop(i)
+                port = sys.argv.pop(i)
+                sys.argv.pop(i)
+
+        hosts = ['--host', '-h', '--address', '-a']
+        for h in hosts:
+            if h in sys.argv:
+                i = sys.argv.index(h)
+                sys.argv.pop(i)
+                host = sys.argv.pop(i)
+                sys.argv.pop(i)
+
+        # if we still have something left, assume it's an address
+        if len(sys.argv) > 1:
+            host = sys.argv[1]
+
+    print "Path root: %s" % path_root
+
+    
+    #port = 8088
+    #start the server loop
+    #run(host='localhost', port=8088)
+    #run(app=server, host='localhost', port=port)
+    #reloader=True enables Auto Reloading
+    #run(host=configs['host'], port=configs['port'], reloader=True)
+    #run(app=server, host='localhost', port=port, reloader=True)
+    run(app=server, host=host, port=port, reloader=True)
