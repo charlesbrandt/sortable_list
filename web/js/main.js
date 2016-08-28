@@ -50,8 +50,8 @@ ajax.post = function (url, data, callback, async) {
 };
 
    
-var el = document.getElementById('sort');
-var sortable = Sortable.create(el, {
+var main_list = document.getElementById('sort');
+var sortable = Sortable.create(main_list, {
   handle: ".handle",
   store: {
     /**
@@ -110,25 +110,49 @@ var sortable = Sortable.create(el, {
 
 var modals = document.getElementsByClassName('modal');
 
+var change = function(value) {
+  document.getElementById("position").value = value;
+}
+
 var modal_helper = function(evt) {
   (evt.target);
-  #returns HTMLCollection
+  //returns HTMLCollection
   var html_collection = document.getElementsByClassName('item');
-  #convert that to a standard array to get access to indexOf
+  //convert that to a standard array to get access to indexOf
   var items = [].slice.call(html_collection);
   
   var cur_item = evt.target.parentElement.parentElement;
-  console.log(items.indexOf(cur_item));
+  var cur_pos = items.indexOf(cur_item);
   vex.dialog.open({
-    unsafeMessage: '<img src="/image/' + evt.target.getAttribute('image-data') + '">',
+    unsafeMessage: '<img src="/image/' + evt.target.getAttribute('image-data') + '" width="400px"><p>' + evt.target.getAttribute('image-data') + '</p>',
     input: [
-      'fields',
+      '<div class="vex-xcustom-field-wrapper">',
+      '<input type="button" onclick="change(0)" value="first">',
+      '<input type="button" onclick="change(' + items.length + ')" value="last">',
+      '</div>',
+
+      '<div class="vex-xcustom-field-wrapper">',
+        '<label for="position">Position</label>',
+          '<input id="position" name="position" value="' + cur_pos + '" />',
+      '</div>',
     ].join(''),
     callback: function (data) {
       if (!data) {
         return console.log('Cancelled');
       }
-      console.log(data);
+      //childNodes returns text nodes too...
+      // end up with double the number
+      //" #text "
+      //console.log( main_list.childNodes[data.position] );
+      console.log( main_list.children[data.position] );
+      console.log (evt.target);
+      //offset needed?
+      var dest = parseInt(data.position) + 0;
+      //main_list.insertBefore(main_list.childNodes[cur_pos], main_list.childNodes[dest]);
+      main_list.insertBefore(main_list.children[cur_pos], main_list.children[dest]);
+      //console.log('main_list.insertBefore(main_list.children[' + cur_pos + '], main_list.children[' + dest + ']);')
+      //console.log(data);
+      sortable.save();
     }
     
   })

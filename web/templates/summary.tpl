@@ -27,16 +27,25 @@
 
     %if content['path'].type() == "Image":
     <a href="/image/{{content['path'].to_relative()}}">
-    %elif content['path'].type() == "List":
-    <a href="/text/{{content['path'].to_relative()}}">
-    %else:
-    <a href="/path/{{content['path'].to_relative()}}">
-    %end
       <div class="follow">
         <!-- follow -->
       </div>
     </a>
+    %elif content['path'].type() == "List":
+    <a href="/text/{{content['path'].to_relative()}}">
+      <div class="follow">
+        <!-- follow -->
+      </div>
+    </a>
+    %else:
+    <a href="/path/{{content['path'].to_relative()}}">
+      <div class="follow">
+        <!-- follow -->
+      </div>
+    </a>
+    %end
 
-  </div>  
+  </div>
   
 </div>
+
