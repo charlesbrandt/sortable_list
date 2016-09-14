@@ -234,13 +234,13 @@ def text(relative=''):
 @server.route('/path')
 def path(relative=''):
     """
-    serve a static file
+    serve a path ... either a directory or a file
 
-    this also allows pose to function as a customizable file system browser
-
-    be careful with what you set path_root to
-    if the machine you run this on has sensitive information
-    and is connected to a public network
+    !!! WARNING !!!
+    this allows the app to function as a customizable file system browser
+    be careful with what you set path_root to.
+    If the machine you run this on has sensitive information
+    and is connected to a public network, it's available
     """
     global path_root
 
@@ -254,8 +254,32 @@ def path(relative=''):
     full_path = os.path.join(path_root, relative)
     path = Path(full_path, relative_prefix=path_root)
 
-    (sl, contents) = gaze(full_path)
-    return template('collection', path=path, contents=contents)
+    (sl, collection, current) = gaze(full_path)
+    if current:
+        #might be able to figure these details out in javascript
+        #but for now:
+        index = collection.index(current)
+        if index != 0:
+            previous_item = collection[index-1]
+        else:
+            previous_item = collection[-1]
+
+        if index != len(collection)-1:
+            next_item = collection[index+1]
+        else:
+            next_item = collection[0]
+
+        context = { "path": path,
+                    "collection": collection,
+                    "content": current,
+                    "index": index,
+                    "previous": previous_item,
+                    "next": next_item,
+                    }
+            
+        return template('content', c=context)
+    else:
+        return template('collection', path=path, collection=collection)
 
 @server.route('/now')
 def now(relative=''):

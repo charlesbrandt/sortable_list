@@ -26,7 +26,7 @@
     </div>
 
     %if content['path'].type() == "Image":
-    <a href="/image/{{content['path'].to_relative()}}">
+    <a href="/path/{{content['path'].to_relative()}}">
       <div class="follow">
         <!-- follow -->
       </div>

@@ -20,7 +20,7 @@
     </h3>
 
     <div id="sort">
-      %for content in contents:
+      %for content in collection:
       %include summary content=content
       %end
     </div>

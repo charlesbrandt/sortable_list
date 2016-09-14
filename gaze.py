@@ -43,15 +43,29 @@ def is_url(source):
     else:
         return False
 
-def scan_directory(path, sl, contents):
+def scan_directory(path, sl, contents, current=None):
     """
     helper function...
     might need to do this in different places
 
     generate a generic, JSON safe, common object representation for everything
     """
+    matched = None
     #verify the sent path.type == directory
     assert path.type() == "Directory"
+
+    #look to see if there is an existing json/list in the path
+    #with the same name as the current directory...
+    #if so, this may be the configuration file for the content
+    #load that and investigate
+    #(could also look for some standard names, like 'config.json', etc)
+    list_file = path.name + ".list"
+    list_path = os.path.join(str(path), list_file)
+    if os.path.exists(list_path):
+        sl.load(list_path)
+        print "Loaded Sortable List from: %s" % list_path
+        #print sl
+
     #print dir(path)
     folder = path.load()
     #print dir(folder)
@@ -88,22 +102,20 @@ def scan_directory(path, sl, contents):
 
     #pick up everything else now
     #print default_order
-    for dpath in folder.contents:
-        #print type(dpath), dpath
-        if not dpath.path in default_order:
-            default_order.append(dpath.path)
+    for remainder in folder.contents:
+        #print type(remainder), remainder
+        if not remainder.path in default_order:
+            default_order.append(remainder.path)
         #else:
-        #    print "Already had: %s" % dpath.path
+        #    print "Already had: %s" % remainder.path
 
     #print "default_order: %s" % len(default_order)
-
-    #folder.contents = default_order
     #print len(default_order)
-
 
     #first reverse the order of the default...
     #next step will insert at the beginning (effectively reversing it again)
     default_order.reverse()
+
     #run through a similar routine as medley...
     #check for anything new...
     #add it to the beginning of the list if found:
@@ -116,27 +128,31 @@ def scan_directory(path, sl, contents):
 
     #now use the order of the sl to create corresponding content objects
     for list_item in sl:
-        #this has the potential of adding duplicates
-        #if more than one folder in the path with the same name (diff extension)
-        #for dpath in folder.directories:
         for cur_path in default_order:
             dpath = Path(cur_path)
             if dpath.filename == list_item:
-                #at a minimum, create the corresponding contents if necessary
-
-                #TODO:
-                #consider counting items in a directory (photos, etc):
-                #this would help for showing a summary
-                #  {{len(d.images)}} images<br>
+                #create the corresponding minimal, json-friendly content objects
                 
+                #TODO:
+                #could consider including content type here 
                 if dpath.type() == "Directory":
+                    #TODO:
+                    #consider counting items in a directory (photos, etc):
+                    #this would help for showing a summary
+                    #  {{len(d.images)}} images<br>
+
                     d = dpath.load()
-                    contents.append( {'name': dpath.filename, 'image': d.default_image(), 'path': dpath} )
+                    simple = {'name': dpath.filename, 'image': d.default_image(), 'path': dpath} 
                 elif dpath.type() == "Image":
-                    contents.append( {'name': dpath.filename, 'image': dpath, 'path': dpath} )
+                    simple = {'name': dpath.filename, 'image': dpath, 'path': dpath}
                 else:
-                    contents.append( {'name': dpath.filename, 'image': '', 'path': dpath} )
-    
+                    simple = {'name': dpath.filename, 'image': '', 'path': dpath}
+
+                contents.append( simple )
+                if dpath.filename == current:
+                    matched = simple
+                    
+    return matched
 
 def gaze_within(source):
     """
@@ -164,6 +180,7 @@ def gaze_within(source):
     """
     sl = SortableList()
     contents = []
+    current = None
 
     #TODO:
     #check for relative path here.. fill in the blanks as needed:
@@ -176,19 +193,7 @@ def gaze_within(source):
     
     if path.type() == "Directory":
 
-        #look to see if there is an existing json/list in the path
-        #with the same name as the current directory...
-        #if so, this may be the configuration file for the content
-        #load that and investigate
-        #(could also look for some standard names, like 'config.json', etc)
-        list_file = path.name + ".list"
-        list_path = os.path.join(source, list_file)
-        if os.path.exists(list_path):
-            sl.load(list_path)
-            print "Loaded Sortable List from: %s" % list_path
-            #print sl
-
-        scan_directory(path, sl, contents)
+        current = scan_directory(path, sl, contents)
             
         #print item.directories
 
@@ -197,8 +202,8 @@ def gaze_within(source):
     
     elif path.type() == "JSON":
         #could load it here... loop over each object
-
         pass
+    
     elif path.type() == "List":
         #could load it here... loop over each object
         
@@ -208,27 +213,31 @@ def gaze_within(source):
         #now that the list has loaded, see if it's a list for the parent dir:
 
         if path.name == path.parent().name:
-            scan_directory(path.parent(), sl, contents)
+            current = scan_directory(path.parent(), sl, contents)
         else:
             #TODO
             #next option would be to look for a json file with the same name
             #if it exists, load that for content list
             print "%s != %s" % (path.name, path.parent().name)
+            exit()
 
 
     else:
-        #some other type of file... dunno.
-        print "Don't know what to do with: %s" % source
+        #some other type of file...
+        #load the parent directory in this case
+        #and set this file to be the current content
+        current = scan_directory(path.parent(), sl, contents, path.filename)
 
 
     #print "Sortable List: %s" % (sl)
     #print "Contents: %s" % (contents)
     
     #go ahead and save the updated version
+    #(e.g. any new files found during scan)
     if sl.source:
         sl.save()
 
-    return (sl, contents)
+    return (sl, contents, current)
     
 def gaze(source):
     """
@@ -238,7 +247,6 @@ def gaze(source):
 
     if local path, many options to consider... see gaze_within
     """
-
     #it's easier to check for urls...
     #they should all start with http
     if is_url(source):
@@ -255,10 +263,10 @@ def gaze(source):
             source = source.replace('file:/', '')
         #print source
 
-        (sl, contents) = gaze_within(source)
+        (sl, contents, current) = gaze_within(source)
 
 
-    return (sl, contents)
+    return (sl, contents, current)
 
 if __name__ == '__main__':
     source = None
