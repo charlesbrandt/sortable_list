@@ -1,3 +1,11 @@
+*2016.12.01 10:23:51 code
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/launch.sh
+/c/public/moments/moments/path.py
+/c/public/moments/moments/sortable_list.py
+/c/public/sortable_list/gaze.py
+/c/public/sortable_list/web/application.py
+
 *2016.08.25 18:57:13 todo
 /c/public/sortable_list/instances.txt
 /c/public/sortable_list/launch.sh

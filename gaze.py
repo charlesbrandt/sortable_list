@@ -16,7 +16,7 @@
 import os, sys, codecs
 import re
 from moments.path import Path, check_ignore
-from sortable_list import SortableList
+from moments.sortable_list import SortableList
 
 def usage():
     print __doc__
