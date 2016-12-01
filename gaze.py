@@ -54,21 +54,24 @@ def scan_directory(path, sl, contents, current=None):
     #verify the sent path.type == directory
     assert path.type() == "Directory"
 
-    #look to see if there is an existing json/list in the path
-    #with the same name as the current directory...
-    #if so, this may be the configuration file for the content
-    #load that and investigate
-    #(could also look for some standard names, like 'config.json', etc)
-    list_file = path.name + ".list"
-    list_path = os.path.join(str(path), list_file)
-    if os.path.exists(list_path):
-        sl.load(list_path)
-        print "Loaded Sortable List from: %s" % list_path
-        #print sl
+    # moving to folder.sortable_list() call below
+    ## #look to see if there is an existing json/list in the path
+    ## #with the same name as the current directory...
+    ## #if so, this may be the configuration file for the content
+    ## #load that and investigate
+    ## #(could also look for some standard names, like 'config.json', etc)
+    ## list_file = path.name + ".list"
+    ## list_path = os.path.join(str(path), list_file)
+    ## if os.path.exists(list_path):
+    ##     sl.load(list_path)
+    ##     print "Loaded Sortable List from: %s" % list_path
+    ##     #print sl
 
     #print dir(path)
     folder = path.load()
     #print dir(folder)
+
+    folder.sortable_list(sl)
 
     folder.ignores.extend(['sized', 'action.txt'])
     #this is called when doing a Directory.__init__

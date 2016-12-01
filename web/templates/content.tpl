@@ -37,7 +37,7 @@
         <source src="/file/{{c['path'].to_relative()}}" type="video/webm" />
         <p class="vjs-no-js" >Video requires javascript and HTML5 video</p>
       </video>
-      %elif content['path'].type() == "Image":
+      %elif c['path'].type() == "Image":
         <img src="/image/{{c['path'].to_relative()}}" width="100%">      
       %else:
         Not sure how to render: {{c['path'].to_relative()}}

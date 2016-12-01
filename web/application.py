@@ -133,9 +133,20 @@ def save(relative=''):
     #now check if the destination is a directory...
     #in that case, create a sortable.list name in the directory
     if os.path.isdir(relative):
+        print "Relative directory passed in:", relative
         path = Path(relative)
+        print "Path loaded:", path
+
         name = path.name + ".list"
         destination = os.path.join(relative, name)
+        #TODO:
+        #something recursive can happen here:
+        #having difficulty replicating...
+        #should work though!
+        #destination = path.sortable_list_path()
+        
+        print "Destination:", destination
+
     else:
         destination = relative
 
