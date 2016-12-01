@@ -142,11 +142,11 @@ def scan_directory(path, sl, contents, current=None):
                     #  {{len(d.images)}} images<br>
 
                     d = dpath.load()
-                    simple = {'name': dpath.filename, 'image': d.default_image(), 'path': dpath} 
+                    simple = {'name': dpath.filename, 'image': d.default_image(), 'path': dpath, 'type': 'directory'} 
                 elif dpath.type() == "Image":
-                    simple = {'name': dpath.filename, 'image': dpath, 'path': dpath}
+                    simple = {'name': dpath.filename, 'image': dpath, 'path': dpath, 'type': 'image'}
                 else:
-                    simple = {'name': dpath.filename, 'image': '', 'path': dpath}
+                    simple = {'name': dpath.filename, 'image': '', 'path': dpath, 'type': 'unknown'}
 
                 contents.append( simple )
                 if dpath.filename == current:

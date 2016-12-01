@@ -136,7 +136,9 @@ class SortableTextList(list):
 class SortableList(SortableTextList):
     """
     Instead of only containing text items
-    this should allow objects
+    this could eventually allow objects
+
+    (currently still text [2016.12.01])
     """
     #this is the way Cluster orders parameters...
     #wondering if it is more common to pass a list in as default on init

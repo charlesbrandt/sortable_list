@@ -188,6 +188,23 @@ def image(relative=''):
         #TODO: raise 404
         pass
 
+@server.route('/file/:relative#.+#')
+def serve_file(relative=''):
+    """
+    """
+    global path_root
+
+    #if not re.match('/', relative):
+    #    relative = os.path.join(path_root, relative)
+
+    #print "SHOWING IMAGE: %s" % relative
+    path = Path(relative, relative_prefix=path_root)
+    #if path.type() == "Image":
+    return static_file(relative, root=path_root)
+    ## else:
+    ##     #TODO: raise 404
+    ##     pass
+
 
 def expand_relative(relative):
     global path_root

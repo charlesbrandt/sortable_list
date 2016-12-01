@@ -28,8 +28,21 @@
     
     <div id="details">
       %loaded = c['path'].load()
-      {{ c['path'].type() }}
-      <img src="/image/{{c['path'].to_relative()}}" width="100%">
+      {{ c['path'].type() }}, {{ c['content']['type'] }}
+      %if c['path'].type() == "Movie":
+      <video id="main_movie" class="video-js vjs-default-skin"
+         controls preload="auto" width="640" height="264"
+         poster="/image/{{ c['content']['image'] }}"
+         data-setup='{"example_option":true}'>
+        <source src="/file/{{c['path'].to_relative()}}" type="video/webm" />
+        <p class="vjs-no-js" >Video requires javascript and HTML5 video</p>
+      </video>
+      %elif content['path'].type() == "Image":
+        <img src="/image/{{c['path'].to_relative()}}" width="100%">      
+      %else:
+        Not sure how to render: {{c['path'].to_relative()}}
+      %end
+      
       
     </div>
     
