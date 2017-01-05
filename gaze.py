@@ -50,6 +50,12 @@ def scan_directory(path, sl, contents, current=None):
 
     generate a generic, JSON safe, common object representation for everything
     """
+    #debug helper
+    #print "SORTABLE LIST:"
+    #for item in sl:
+    #    print item
+    #print
+
     matched = None
     #verify the sent path.type == directory
     assert path.type() == "Directory"
@@ -125,9 +131,14 @@ def scan_directory(path, sl, contents, current=None):
     for cur_path in default_order:
         #print d.name
         dpath = Path(cur_path)
-        if (not dpath.filename in sl):
+        if not dpath.filename in sl:
             sl.insert(0, dpath.filename)
             #sl.append(dpath.filename)
+
+    ## print "SORTABLE LIST:"
+    ## for item in sl:
+    ##     print item
+    ## print
 
     #now use the order of the sl to create corresponding content objects
     for list_item in sl:
@@ -209,9 +220,12 @@ def gaze_within(source):
     
     elif path.type() == "List":
         #could load it here... loop over each object
-        
-        if os.path.exists(source):
-            sl.load(source)
+        #however, 
+        #loading now happens as part of loading the path in scan_directory call
+        #should choose one or the other
+        #otherwise we end up with multiple copies of the list
+        #if os.path.exists(source):
+        #    sl.load(source)
 
         #now that the list has loaded, see if it's a list for the parent dir:
 

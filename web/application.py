@@ -160,6 +160,9 @@ def save(relative=''):
     #gets a string
     #could be json or text / list
     content = request.forms.get('content')
+    #print "CONTENT:"
+    #print content
+    #print
 
     save_as = request.forms.get('format')
 
@@ -176,9 +179,13 @@ def save(relative=''):
     ##     save_json(destination, ordered_list)
     ##     #but that seems like the same thing as above
 
-    #return "Success!"
+    #if save() is being called via ajax,
+    #redirecting here only causes extra load on the server
     #redirect("/text" + relative)
-    redirect("/path" + relative)
+    #redirect("/path" + relative)
+    
+    #this should be sufficient
+    return "Success!"
 
 
 
