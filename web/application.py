@@ -257,7 +257,7 @@ def text(relative=''):
     print "Editing Text: %s" % relative
     path = Path(full_path, relative_prefix=path_root)
     contents = file(full_path).read()
-    if path.type() in [ "Text", "List", "JSON" ]:
+    if path.type() in [ "Log", "List", "JSON" ]:
         return template('editor', path=path, contents=contents)
 
     else:

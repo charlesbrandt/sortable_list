@@ -28,9 +28,9 @@
     <p style="clear:both">&nbsp;</p>
     <p>&nbsp;</p>
 
-    <hr />
+    % pass # <hr />
+    % pass # include footer
     
-    %include footer
     
     <script type="application/javascript">
      var path = "{{ path }}";

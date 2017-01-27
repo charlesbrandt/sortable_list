@@ -28,7 +28,7 @@
     
     <div id="details">
       %loaded = c['path'].load()
-      {{ c['path'].type() }}, {{ c['content']['type'] }}
+      %#{{ c['path'].type() }}, {{ c['content']['type'] }}
       %if c['path'].type() == "Movie":
       <video id="main_movie" class="video-js vjs-default-skin"
          controls preload="auto" width="640" height="264"
@@ -37,6 +37,12 @@
         <source src="/file/{{c['path'].to_relative()}}" type="video/webm" />
         <p class="vjs-no-js" >Video requires javascript and HTML5 video</p>
       </video>
+      %elif c['path'].type() == "Sound":
+      <audio id="player" preload="auto" tabindex="0" controls="" type="audio/mpeg">
+        <source type="audio/mp3" src="/file/{{c['path'].to_relative()}}">
+        Sorry, your browser does not support HTML5 audio.
+      </audio>
+          
       %elif c['path'].type() == "Image":
         <img src="/image/{{c['path'].to_relative()}}" width="100%">      
       %else:
@@ -49,9 +55,8 @@
     <p style="clear:both">&nbsp;</p>
     <p>&nbsp;</p>
 
-    <hr />
-    
-    %include footer
+    % pass # <hr />
+    % pass # include footer
     
     <script type="application/javascript">
      var path = "{{ c['path'] }}";

@@ -31,7 +31,7 @@
         <!-- follow -->
       </div>
     </a>
-    %elif content['path'].type() == "List":
+    %elif content['path'].type() in [ "List", "Log" ]:
     <a href="/text/{{content['path'].to_relative()}}">
       <div class="follow">
         <!-- follow -->
