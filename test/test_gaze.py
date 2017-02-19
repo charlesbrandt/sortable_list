@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys, os
 
 #add parent's parent directory to path to find module if not installed
@@ -31,7 +32,7 @@ class SortableListTest(unittest.TestCase):
 
         sample = os.path.join( os.path.dirname(os.path.realpath(__file__)), "sample.list")
         (self.sl, contents) = gaze(sample)
-        print "sl len:", len(self.sl)
+        print("sl len:", len(self.sl))
         assert len(self.sl) == 7
 
     ## def test_save(self):

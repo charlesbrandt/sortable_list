@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>{{ path.name }}</title>
-    %include header description='', keywords='', author=''  
+    %include('header.tpl', description='', keywords='', author='')
     
     <script type="text/javascript">      
     </script>
@@ -21,7 +21,7 @@
 
     <div id="sort">
       %for content in collection:
-      %include summary content=content
+      %include('summary.tpl', content=content)
       %end
     </div>
     

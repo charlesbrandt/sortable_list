@@ -38,13 +38,14 @@
 
 </head>
 <body>
-  %include navigation 
+  %include('navigation.tpl')
 
   %#this is utilized by rebase calls
   %#easier than passing in body from application.py
-  %include
+  
+  {{!base}}
 
-  %include footer 
+  %include('footer.tpl')
 
 </body>
 </html>

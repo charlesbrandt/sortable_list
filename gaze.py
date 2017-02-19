@@ -12,6 +12,7 @@
 #
 
 """
+from __future__ import print_function
 
 import os, sys, codecs
 import re
@@ -19,7 +20,7 @@ from moments.path import Path, check_ignore
 from moments.sortable_list import SortableList
 
 def usage():
-    print __doc__
+    print(__doc__)
 
 def is_path(source):
     """
@@ -199,11 +200,11 @@ def gaze_within(source):
     #TODO:
     #check for relative path here.. fill in the blanks as needed:
     if not re.match('/', source):
-        raise ValueError, "Don't know how to handle relative paths yet"
+        raise ValueError("Don't know how to handle relative paths yet")
     
     path = Path(source)
     
-    print path.name
+    print(path.name)
     
     if path.type() == "Directory":
 
@@ -235,7 +236,7 @@ def gaze_within(source):
             #TODO
             #next option would be to look for a json file with the same name
             #if it exists, load that for content list
-            print "%s != %s" % (path.name, path.parent().name)
+            print("%s != %s" % (path.name, path.parent().name))
             exit()
 
 

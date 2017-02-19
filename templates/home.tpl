@@ -1,3 +1,5 @@
+%rebase("layout.tpl", title="Browser", active="home")
+
 <h1>Server Path Root:</h1>
 <p>{{ path_root }}</p>
 <p>(set this with the -c option for server<br>
@@ -20,4 +22,3 @@ e.g. python application.py -c /media/Data)</p>
 <p></p>
 <blockquote></blockquote>
 
-%rebase layout title="Browser", active="home"

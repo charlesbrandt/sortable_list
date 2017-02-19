@@ -6,6 +6,7 @@ separate tab:
 cd /c/public/sortable_list/web
 python application.py 
 """
+from __future__ import print_function
 
 import sys, os, re
 
@@ -25,7 +26,7 @@ server_root = os.path.dirname(os.path.realpath(__file__))
 #print "Server root: %s" % server_root
 
 #for importing sortable_list
-sys.path.append(os.path.dirname(server_root))
+#sys.path.append(os.path.dirname(server_root))
 from gaze import gaze
 
 #default is "./views/" directory
@@ -39,7 +40,7 @@ except:
     try:
         import json
     except:
-        print "No json module found"
+        print("No json module found")
         exit()
         
 from moments.path import Path
@@ -53,27 +54,27 @@ server = bottle.Bottle()
 #Be careful when specifying a relative root-path such as root='./static/files'.
 #The working directory (./) and the project directory are not always the same.
 #@route('/css/:filename')
-@server.route('/css/:filename#.+#')
+@server.route('/css/<filename:path>')
 #@route('/css/style.css')
 
 def css_static(filename):
     css_path = os.path.join(server_root, 'css')
-    print css_path
+    print(css_path)
     #return static_file(filename, root='./css')
     return static_file(filename, root=css_path)
 
-@server.route('/js/:filename#.+#')
+@server.route('/js/<filename:path>')
 def js_static(filename):
     js_path = os.path.join(server_root, 'js')
     return static_file(filename, root=js_path)
 
-@server.route('/img/:filename#.+#')
+@server.route('/img/<filename:path>')
 def images_static(filename):
     image_path = os.path.join(server_root, 'img')
     return static_file(filename, root=image_path)
   
  
-@server.route('/path/launch/:source#.+#')
+@server.route('/path/launch/<source:path>')
 def launch_path(source=''):
     global path_root
     path = Path(path_root + source, relative_prefix=path_root)
@@ -99,7 +100,7 @@ def launch_path(source=''):
 #    return static_file(filename, root='/path/to/static/files', download=filename)
 
 
-@server.post('/save/:relative#.+#')
+@server.post('/save/<relative:path>')
 @server.post('/save/')
 @server.post('/save')
 def save(relative=''):
@@ -113,7 +114,7 @@ def save(relative=''):
 
     if not relative:
         #could set a default here if it is desireable
-        print "NO DESTINATION SENT!"
+        print("NO DESTINATION SENT!")
     elif not re.match('/', relative):
         relative = path_root + relative
 
@@ -122,9 +123,9 @@ def save(relative=''):
     #now check if the destination is a directory...
     #in that case, create a sortable.list name in the directory
     if os.path.isdir(relative):
-        print "Relative directory passed in:", relative
+        print("Relative directory passed in:", relative)
         path = Path(relative)
-        print "Path loaded:", path
+        print("Path loaded:", path)
 
         name = path.name + ".list"
         destination = os.path.join(relative, name)
@@ -134,7 +135,7 @@ def save(relative=''):
         #should work though!
         #destination = path.sortable_list_path()
         
-        print "Destination:", destination
+        print("Destination:", destination)
 
     else:
         destination = relative
@@ -161,7 +162,7 @@ def save(relative=''):
         #print "writing (raw): ", content
         dest_file.write(content)
         dest_file.close()
-        print "saved content to: ", destination
+        print("saved content to: ", destination)
     ## elif save_as == "json":
     ##     #could also do something like:
     ##     ordered_list = json.loads(content)
@@ -178,7 +179,7 @@ def save(relative=''):
 
 
 
-@server.route('/image/:relative#.+#')
+@server.route('/image/<relative:path>')
 def image(relative=''):
     """
     """
@@ -195,7 +196,7 @@ def image(relative=''):
         #TODO: raise 404
         pass
 
-@server.route('/file/:relative#.+#')
+@server.route('/file/<relative:path>')
 def serve_file(relative=''):
     """
     """
@@ -227,7 +228,7 @@ def expand_relative(relative):
 
     return full_path
 
-@server.route('/text/:relative#.+#')
+@server.route('/text/<relative:path>')
 def text(relative=''):
     """
     load a text editor
@@ -243,7 +244,7 @@ def text(relative=''):
 
     full_path = expand_relative(relative)
 
-    print "Editing Text: %s" % relative
+    print("Editing Text: %s" % relative)
     path = Path(full_path, relative_prefix=path_root)
     contents = file(full_path).read()
     if path.type() in [ "Log", "List", "JSON" ]:
@@ -253,7 +254,7 @@ def text(relative=''):
         #TODO: raise 404
         pass
 
-@server.route('/path/:relative#.+#')
+@server.route('/path/<relative:path>')
 @server.route('/path/')
 @server.route('/path')
 def path(relative=''):
@@ -337,7 +338,7 @@ if __name__ == '__main__':
         helps = ['--help', 'help', '-h']
         for i in helps:
             if i in sys.argv:
-                print "python application.py --context [directory to load] [address]"
+                print("python application.py --context [directory to load] [address]")
                 exit()
 
         proots = ['--root', '-r', '-c', '--context']
@@ -368,7 +369,7 @@ if __name__ == '__main__':
         if len(sys.argv) > 1:
             host = sys.argv[1]
 
-    print "Path root: %s" % path_root
+    print("Path root: %s" % path_root)
     
     #start the server loop
     #reloader=True enables Auto Reloading

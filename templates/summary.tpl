@@ -2,7 +2,7 @@
   <div class="thumbnail">
     %if content['image']:
     %#print content['image']
-    %include image_tiny path=content['image'], alt="image"
+    %include('image_tiny.tpl', path=content['image'], alt="image")
     %else:
     [{{content['path'].filename}}]
     %end
