@@ -112,6 +112,8 @@ var modals = document.getElementsByClassName('modal');
 
 var change = function(value) {
   document.getElementById("position").value = value;
+  var buttons = document.getElementsByClassName("vex-dialog-button-primary");
+  buttons[0].click();
 }
 
 var modal_helper = function(evt) {
@@ -124,17 +126,14 @@ var modal_helper = function(evt) {
   var cur_item = evt.target.parentElement.parentElement;
   var cur_pos = items.indexOf(cur_item);
   vex.dialog.open({
-    unsafeMessage: '<img src="/image/' + evt.target.getAttribute('image-data') + '" width="400px"><p>' + evt.target.getAttribute('image-data') + '</p>',
     input: [
       '<div class="vex-xcustom-field-wrapper">',
       '<input type="button" onclick="change(0)" value="first">',
+      '<input type="text" id="position" name="position" style="width:80px" value="' + cur_pos + '" />',
       '<input type="button" onclick="change(' + items.length + ')" value="last">',
       '</div>',
 
-      '<div class="vex-xcustom-field-wrapper">',
-        '<label for="position">Position</label>',
-          '<input id="position" name="position" value="' + cur_pos + '" />',
-      '</div>',
+      '<img src="/image/' + evt.target.getAttribute('image-data') + '" width="100%"><p>' + evt.target.getAttribute('image-data') + '</p>',
     ].join(''),
     callback: function (data) {
       if (!data) {
@@ -144,6 +143,7 @@ var modal_helper = function(evt) {
       // end up with double the number
       //" #text "
       //console.log( main_list.childNodes[data.position] );
+      console.log( data.position );
       console.log( main_list.children[data.position] );
       console.log (evt.target);
       //offset needed?

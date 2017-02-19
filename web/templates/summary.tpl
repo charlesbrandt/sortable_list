@@ -1,6 +1,7 @@
 <div data-id="{{content['name']}}" class="content item">
   <div class="thumbnail">
     %if content['image']:
+    %#print content['image']
     %include image_tiny path=content['image'], alt="image"
     %else:
     [{{content['path'].filename}}]
@@ -31,7 +32,7 @@
         <!-- follow -->
       </div>
     </a>
-    %elif content['path'].type() in [ "List", "Log" ]:
+    %elif content['path'].type() in [ "List", "Log", "JSON" ]:
     <a href="/text/{{content['path'].to_relative()}}">
       <div class="follow">
         <!-- follow -->

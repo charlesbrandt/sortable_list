@@ -9,6 +9,8 @@ python application.py
 
 import sys, os, re
 
+#from gevent import monkey; monkey.patch_all()
+
 from bottle import static_file, redirect
 from bottle import get, post, request
 from bottle import route, run
@@ -44,19 +46,6 @@ from moments.path import Path
 from moments.launch import edit, file_browse
 
 server = bottle.Bottle()
-
-
-# GLOBALS:
-#this is equivalent to main() function in template_script.py
-
-#requires that at least one argument is passed in to the script itself
-#(through sys.argv)
-ignores = []
-
-port = 8888
-path_root = "/path/to/some/safe/location/"
-#this is not a safe path, but it's convenient
-path_root = "/"
 
 
 # ROUTES
@@ -324,6 +313,21 @@ def now(relative=''):
 def index():
     global path_root
     return template('home', path_root=path_root)
+
+
+
+
+# GLOBALS:
+#this is equivalent to main() function in template_script.py
+
+#requires that at least one argument is passed in to the script itself
+#(through sys.argv)
+ignores = []
+
+port = 8888
+path_root = "/path/to/some/safe/location/"
+#this is not a safe path, but it's convenient
+path_root = "/"
 
 if __name__ == '__main__':
     #default host:

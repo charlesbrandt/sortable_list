@@ -79,7 +79,7 @@ def scan_directory(path, sl, contents, current=None):
 
     folder.sortable_list(sl)
 
-    folder.ignores.extend(['sized', 'action.txt'])
+    folder.ignores.extend(['sized', 'action.txt', '\._*'])
     #this is called when doing a Directory.__init__
     #but we need to do it again after updating ignores
     folder.scan_directory()

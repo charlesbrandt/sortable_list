@@ -9,6 +9,9 @@
   </head>
   <body>
     <!-- navigation / header -->
+    <div style="float: right" id="actions">
+      <img src="/img/menu.svg" width="50">
+    </div>
     <div style="float: right">
       <a href="/path/{{c['previous']['path']}}">previous</a>
       <input name="position" value="{{c['index']}}">
@@ -31,7 +34,7 @@
       %#{{ c['path'].type() }}, {{ c['content']['type'] }}
       %if c['path'].type() == "Movie":
       <video id="main_movie" class="video-js vjs-default-skin"
-         controls preload="auto" width="640" height="264"
+         controls preload="auto" width="100%" height="90%"
          poster="/image/{{ c['content']['image'] }}"
          data-setup='{"example_option":true}'>
         <source src="/file/{{c['path'].to_relative()}}" type="video/webm" />
