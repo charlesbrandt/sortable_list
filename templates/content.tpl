@@ -1,7 +1,7 @@
 <html>
   <head>
     <title>{{ c['path'].name }}</title>
-    %include header description='', keywords='', author=''  
+    %include('header.tpl', description='', keywords='', author='')
     
     <script type="text/javascript">      
     </script>

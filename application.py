@@ -46,7 +46,7 @@ except:
 from moments.path import Path
 from moments.launch import edit, file_browse
 
-server = bottle.Bottle()
+server = application = bottle.Bottle()
 
 
 # ROUTES
