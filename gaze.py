@@ -14,6 +14,8 @@
 """
 from __future__ import print_function
 
+import cProfile, pstats
+
 import os, sys, codecs
 import re
 from moments.path import Path, check_ignore
@@ -78,6 +80,7 @@ def scan_directory(path, sl, contents, current=None):
     folder = path.load()
     #print dir(folder)
 
+
     folder.sortable_list(sl)
 
     folder.ignores.extend(['sized', 'action.txt', '\._*'])
@@ -95,6 +98,8 @@ def scan_directory(path, sl, contents, current=None):
     folder.sort_by_path()
     #print len(folder.contents)
 
+    #print("Made it here")
+    
     #easier to work with strings at this point...
     #Paths are not being recognized as the same python object
     default_order = []
@@ -112,6 +117,7 @@ def scan_directory(path, sl, contents, current=None):
 
     #pick up everything else now
     #print default_order
+    print("created default order... adding anything left to the end")
     for remainder in folder.contents:
         #print type(remainder), remainder
         if not remainder.path in default_order:
@@ -129,6 +135,7 @@ def scan_directory(path, sl, contents, current=None):
     #run through a similar routine as medley...
     #check for anything new...
     #add it to the beginning of the list if found:
+    print("Adding any new items to the sortable list:")
     for cur_path in default_order:
         #print d.name
         dpath = Path(cur_path)
@@ -141,7 +148,11 @@ def scan_directory(path, sl, contents, current=None):
     ##     print item
     ## print
 
+    pr = cProfile.Profile()
+    pr.enable()
+
     #now use the order of the sl to create corresponding content objects
+    print("creating simple content objects from list:")
     for list_item in sl:
         for cur_path in default_order:
             dpath = Path(cur_path)
@@ -166,6 +177,10 @@ def scan_directory(path, sl, contents, current=None):
                 contents.append( simple )
                 if dpath.filename == current:
                     matched = simple
+
+    pr.disable()
+    ps = pstats.Stats(pr, stream=sys.stdout)
+    ps.print_stats()
                     
     return matched
 
@@ -244,6 +259,9 @@ def gaze_within(source):
         #some other type of file...
         #load the parent directory in this case
         #and set this file to be the current content
+
+        #this can be a time intensive way to calculate this,
+        #especially if parent directory has a lot of children:
         current = scan_directory(path.parent(), sl, contents, path.filename)
 
 
