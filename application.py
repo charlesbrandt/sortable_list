@@ -246,9 +246,33 @@ def text(relative=''):
 
     print("Editing Text: %s" % relative)
     path = Path(full_path, relative_prefix=path_root)
-    contents = file(full_path).read()
+    contents = open(full_path).read()
     if path.type() in [ "Log", "List", "JSON" ]:
         return template('editor', path=path, contents=contents)
+
+    else:
+        #TODO: raise 404
+        pass
+
+@server.route('/json/<relative:path>')
+def json_path(relative=''):
+    """
+    load a json editor
+    """
+    global path_root
+
+    #if not re.match('/', relative):
+    #    relative = os.path.join(path_root, relative)
+
+    full_path = expand_relative(relative)
+
+    print("showing json: %s" % relative)
+    path = Path(full_path, relative_prefix=path_root)
+    contents = open(full_path).read()
+    items = json.load(open(full_path))
+    print(items)
+    if path.type() in [ "JSON" ]:
+        return template('json', path=path, contents=contents, items=items)
 
     else:
         #TODO: raise 404

@@ -32,8 +32,14 @@
         <!-- follow -->
       </div>
     </a>
-    %elif content['path'].type() in [ "List", "Log", "JSON" ]:
+    %elif content['path'].type() in [ "List", "Log" ]:
     <a href="/text/{{content['path'].to_relative()}}">
+      <div class="follow">
+        <!-- follow -->
+      </div>
+    </a>
+    %elif content['path'].type() in [ "JSON" ]:
+    <a href="/json/{{content['path'].to_relative()}}">
       <div class="follow">
         <!-- follow -->
       </div>

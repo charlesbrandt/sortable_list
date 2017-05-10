@@ -36,7 +36,7 @@
       <video id="main_movie" class="video-js vjs-default-skin"
          controls preload="auto" width="100%" height="90%"
          poster="/image/{{ c['content']['image'] }}"
-         data-setup='{"example_option":true}'>
+         data-setup='{"example_option":true}' loop>
         <source src="/file/{{c['path'].to_relative()}}" type="video/webm" />
         <p class="vjs-no-js" >Video requires javascript and HTML5 video</p>
       </video>

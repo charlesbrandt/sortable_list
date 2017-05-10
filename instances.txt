@@ -1,3 +1,25 @@
+*2017.04.01 09:45:40 views
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/templates/navigation.tpl
+/c/public/sortable_list/templates/footer.tpl
+/c/public/sortable_list/templates/home.tpl
+/c/public/sortable_list/templates/image_tiny.tpl
+/c/public/medley/server/js/people.js
+/c/public/sortable_list/templates/editor.tpl
+/c/public/sortable_list/templates/layout.tpl
+/c/public/sortable_list/templates/header.tpl
+/c/public/sortable_list/templates/summary.tpl
+/c/public/sortable_list/templates/collection.tpl
+/c/public/sortable_list/css/style.css
+
+*2017.04.01 09:44:07 code
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/launch.sh
+/c/public/moments/moments/path.py
+/c/public/moments/moments/sortable_list.py
+/c/public/sortable_list/gaze.py
+/c/public/sortable_list/application.py
+
 *2017.01.05 19:17:24 todo
 /c/public/sortable_list/instances.txt
 /c/public/sortable_list/launch.sh

@@ -1,7 +1,7 @@
 <html>
 <head>
   <title>{{ path.name }}</title>
-  %include header description='', keywords='', author=''
+  %include('header.tpl', description='', keywords='', author='')
 
   %#<h1> <a href="/path/{{ parent }}">{{parent.name}}</a> </h1>
 </head>
