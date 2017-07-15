@@ -18,6 +18,10 @@
       {{parts[-1][0]}}
       %end
     </h3>
+    <div>
+      % import datetime; now = datetime.datetime.now()
+      as of: {{ now.year }}.{{ now.month }}.{{ now.day }} {{ now.hour }}.{{ now.minute }}
+    </div>
 
     <div id="sort">
       %for content in collection:
