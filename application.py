@@ -28,6 +28,12 @@ the best solution I've found for this is to remove the garbage files created by 
 via 2017.02.04 13:49:08
 /c/public/moments/moments/path.py
 
+#seem to be seeing 0kb files from android with jpg extensions...
+#nothing useful there
+
+    find * -size 0b -name "*.jpg" -exec rm \{\} \;
+
+
 
 """
 from __future__ import print_function
