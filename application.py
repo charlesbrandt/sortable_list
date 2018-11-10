@@ -32,30 +32,25 @@ via 2017.02.04 13:49:08
 """
 from __future__ import print_function
 
-import sys, os, re
+import sys
+import os
+import re
 
-#from gevent import monkey; monkey.patch_all()
+from moments.path import Path
+from moments.launch import edit, file_browse
 
-from bottle import static_file, redirect
-from bottle import get, post, request
-from bottle import route, run
-from bottle import template
+from gaze import gaze
 
-
-#DO NOT USE THIS IN PRODUCTION!!
 import bottle
+# DO NOT USE THIS IN PRODUCTION!!
 bottle.debug(True)
 
 server_root = os.path.dirname(os.path.realpath(__file__))
-#print "Server root: %s" % server_root
+# print("Server root: %s" % server_root)
 
-#for importing sortable_list
-#sys.path.append(os.path.dirname(server_root))
-from gaze import gaze
-
-#default is "./views/" directory
+# default is "./views/" directory
 template_path = os.path.join(server_root, 'templates')
-#bottle.TEMPLATE_PATH.append('./templates/')
+# bottle.TEMPLATE_PATH.append('./templates/')
 bottle.TEMPLATE_PATH.append(template_path)
 
 try:
@@ -66,45 +61,40 @@ except:
     except:
         print("No json module found")
         exit()
-        
-from moments.path import Path
-from moments.launch import edit, file_browse
 
 server = application = bottle.Bottle()
 
 
 # ROUTES
-
-#Be careful when specifying a relative root-path such as root='./static/files'.
-#The working directory (./) and the project directory are not always the same.
-#@route('/css/:filename')
+# Be careful when specifying a relative root-path such as root='./static/files'
+# The working directory (./) and the project directory are not always the same.
 @server.route('/css/<filename:path>')
-#@route('/css/style.css')
-
 def css_static(filename):
     css_path = os.path.join(server_root, 'css')
     print(css_path)
-    #return static_file(filename, root='./css')
-    return static_file(filename, root=css_path)
+    # return static_file(filename, root='./css')
+    return bottle.static_file(filename, root=css_path)
+
 
 @server.route('/js/<filename:path>')
 def js_static(filename):
     js_path = os.path.join(server_root, 'js')
-    return static_file(filename, root=js_path)
+    return bottle.static_file(filename, root=js_path)
+
 
 @server.route('/img/<filename:path>')
 def images_static(filename):
     image_path = os.path.join(server_root, 'img')
-    return static_file(filename, root=image_path)
-  
- 
+    return bottle.static_file(filename, root=image_path)
+
+
 @server.route('/path/launch/<source:path>')
 def launch_path(source=''):
     global path_root
     path = Path(path_root + source, relative_prefix=path_root)
 
-    #just assume the whole thing has been sent
-    #path = Path(source)
+    # just assume the whole thing has been sent
+    # path = Path(source)
 
     response = ''
     if path.type() == "Log":
@@ -119,33 +109,33 @@ def launch_path(source=''):
     response += "LAUNCH PATH: %s<br>" % source
     return response
 
-
-#to force a download, use the following:
-#    return static_file(filename, root='/path/to/static/files', download=filename)
+# to force a download, use the following:
+#    return bottle.static_file(filename, root='/path/to/static/files', download=filename)
 
 
 @server.post('/save/<relative:path>')
 @server.post('/save/')
 @server.post('/save')
 def save(relative=''):
-    """
-    
-    """
+    # debug:
+    # print(dir(bottle.request.forms))
+    # print("Keys: %s" % (bottle.request.forms.keys()))
+    # print("Values: %s" % (bottle.request.forms.values()))
+
     global path_root
 
     if re.match('~', relative):
         relative = os.path.expanduser(relative)
 
     if not relative:
-        #could set a default here if it is desireable
+        # could set a default here if it is desireable
         print("NO DESTINATION SENT!")
     elif not re.match('/', relative):
         relative = path_root + relative
 
-    
-    #destination = Path(relative, relative_prefix=path_root)
-    #now check if the destination is a directory...
-    #in that case, create a sortable.list name in the directory
+    # destination = Path(relative, relative_prefix=path_root)
+    # now check if the destination is a directory...
+    # in that case, create a sortable.list name in the directory
     if os.path.isdir(relative):
         print("Relative directory passed in:", relative)
         path = Path(relative)
@@ -153,72 +143,77 @@ def save(relative=''):
 
         name = path.name + ".list"
         destination = os.path.join(relative, name)
-        #TODO:
-        #something recursive can happen here:
-        #having difficulty replicating...
-        #should work though!
-        #destination = path.sortable_list_path()
-        
+        # TODO:
+        # something recursive can happen here:
+        # having difficulty replicating...
+        # should work though!
+        # destination = path.sortable_list_path()
+
         print("Destination:", destination)
+
+        log_name = path.name + ".list.log"
+        log_destination = os.path.join(relative, log_name)
 
     else:
         destination = relative
 
-    #print destination
-    
-    #debug:
-    #print dir(request.forms)
-    #print "Keys: %s" % (request.forms.keys())
-    #print "Values: %s" % (request.forms.values())
-    
-    #gets a string
-    #could be json or text / list
-    content = request.forms.get('content')
-    #print "CONTENT:"
-    #print content
-    #print
+    # print(destination)
 
-    save_as = request.forms.get('format')
+    # gets a string
+    # could be json or text / list
+    content = bottle.request.forms.get('content')
+    # print("CONTENT:")
+    # print(content)
+    # print()
 
-    if save_as in ["list"]:
-        dest_file = open(destination, 'w')
-        #print "opened: ", destination
-        #print "writing (raw): ", content
-        dest_file.write(content)
-        dest_file.close()
-        print("saved content to: ", destination)
-    ## elif save_as == "json":
-    ##     #could also do something like:
-    ##     ordered_list = json.loads(content)
-    ##     save_json(destination, ordered_list)
-    ##     #but that seems like the same thing as above
+    save_as = bottle.request.forms.get('format')
 
-    #if save() is being called via ajax,
-    #redirecting here only causes extra load on the server
-    #redirect("/text" + relative)
-    #redirect("/path" + relative)
-    
-    #this should be sufficient
-    return "Success!"
+    if destination:
+        if save_as in ["list"]:
+            dest_file = open(destination, 'w')
+            # print("opened: ", destination)
+            # print("writing (raw): ", content)
+            dest_file.write(content)
+            dest_file.close()
+            print("saved content to: ", destination)
 
+            # TODO:
+            # check the .list.log file to see if today's entry already exists
+            #log_path = Path(log_destination)
+
+
+        ## elif save_as == "json":
+        ##     #could also do something like:
+        ##     ordered_list = json.loads(content)
+        ##     save_json(destination, ordered_list)
+        ##     #but that seems like the same thing as above
+
+        # if save() is being called via ajax,
+        # redirecting here only causes extra load on the server
+        # redirect("/text" + relative)
+        # redirect("/path" + relative)
+
+        # this should be sufficient
+        return("Success!")
+    else:
+        return("No destination specified")
 
 
 @server.route('/image/<relative:path>')
 def image(relative=''):
-    """
-    """
     global path_root
 
-    #if not re.match('/', relative):
+    # if not re.match('/', relative):
     #    relative = os.path.join(path_root, relative)
 
-    #print "SHOWING IMAGE: %s" % relative
+    # print()"SHOWING IMAGE: %s" % relative)
     path = Path(relative, relative_prefix=path_root)
     if path.type() == "Image":
-        return static_file(relative, root=path_root)
+        return bottle.static_file(relative, root=path_root)
     else:
-        #TODO: raise 404
+        # TODO: raise 404
         pass
+
 
 @server.route('/file/<relative:path>')
 def serve_file(relative=''):
@@ -232,7 +227,7 @@ def serve_file(relative=''):
     #print "SHOWING IMAGE: %s" % relative
     path = Path(relative, relative_prefix=path_root)
     #if path.type() == "Image":
-    return static_file(relative, root=path_root)
+    return bottle.static_file(relative, root=path_root)
     ## else:
     ##     #TODO: raise 404
     ##     pass
@@ -243,14 +238,11 @@ def expand_relative(relative):
 
     if re.match('~', relative):
         relative = os.path.expanduser(relative)
-    ## else:
-    ##     relative = os.path.join('/', relative)
-    ##     full = os.path.abspath(relative)
-    ## print full
 
     full_path = os.path.join(path_root, relative)
 
     return full_path
+
 
 @server.route('/text/<relative:path>')
 def text(relative=''):
@@ -263,7 +255,7 @@ def text(relative=''):
     """
     global path_root
 
-    #if not re.match('/', relative):
+    # if not re.match('/', relative):
     #    relative = os.path.join(path_root, relative)
 
     full_path = expand_relative(relative)
@@ -271,12 +263,13 @@ def text(relative=''):
     print("Editing Text: %s" % relative)
     path = Path(full_path, relative_prefix=path_root)
     contents = open(full_path).read()
-    if path.type() in [ "Log", "List", "JSON" ]:
-        return template('editor', path=path, contents=contents)
+    if path.type() in ["Log", "List", "JSON"]:
+        return bottle.template('editor', path=path, contents=contents)
 
     else:
-        #TODO: raise 404
+        # TODO: raise 404
         pass
+
 
 @server.route('/json/<relative:path>')
 def json_path(relative=''):
@@ -285,7 +278,7 @@ def json_path(relative=''):
     """
     global path_root
 
-    #if not re.match('/', relative):
+    # if not re.match('/', relative):
     #    relative = os.path.join(path_root, relative)
 
     full_path = expand_relative(relative)
@@ -295,12 +288,13 @@ def json_path(relative=''):
     contents = open(full_path).read()
     items = json.load(open(full_path))
     print(items)
-    if path.type() in [ "JSON" ]:
-        return template('json', path=path, contents=contents, items=items)
+    if path.type() in ["JSON"]:
+        return bottle.template('json', path=path, contents=contents, items=items)
 
     else:
-        #TODO: raise 404
+        # TODO: raise 404
         pass
+
 
 @server.route('/path/<relative:path>')
 @server.route('/path/')
@@ -319,18 +313,14 @@ def path(relative=''):
 
     if re.match('~', relative):
         relative = os.path.expanduser(relative)
-    ## else:
-    ##     relative = os.path.join('/', relative)
-    ##     full = os.path.abspath(relative)
-    ## print full
 
     full_path = os.path.join(path_root, relative)
     path = Path(full_path, relative_prefix=path_root)
 
     (sl, collection, current) = gaze(full_path)
     if current:
-        #might be able to figure these details out in javascript
-        #but for now:
+        # might be able to figure these details out in javascript
+        # but for now:
         index = collection.index(current)
         if index != 0:
             previous_item = collection[index-1]
@@ -342,46 +332,46 @@ def path(relative=''):
         else:
             next_item = collection[0]
 
-        context = { "path": path,
-                    "collection": collection,
-                    "content": current,
-                    "index": index,
-                    "previous": previous_item,
-                    "next": next_item,
-                    }
-            
-        return template('content', c=context)
+        context = {"path": path,
+                   "collection": collection,
+                   "content": current,
+                   "index": index,
+                   "previous": previous_item,
+                   "next": next_item,
+                   }
+
+        return bottle.template('content', c=context)
     else:
-        return template('collection', path=path, collection=collection)
+        return bottle.template('collection', path=path, collection=collection)
+
 
 @server.route('/now')
 def now(relative=''):
-    return template('now')
+    return bottle.template('now')
+
 
 @server.route('/')
 def index():
     global path_root
-    return template('home', path_root=path_root)
-
-
+    return bottle.template('home', path_root=path_root)
 
 
 # GLOBALS:
-#this is equivalent to main() function in template_script.py
+# this is equivalent to main() function in template_script.py
 
-#requires that at least one argument is passed in to the script itself
-#(through sys.argv)
+# requires that at least one argument is passed in to the script itself
+# (through sys.argv)
 ignores = []
 
 port = 8888
 path_root = "/path/to/some/safe/location/"
-#this is not a safe path, but it's convenient
+# this is not a safe path, but it's convenient
 path_root = "/"
 
 if __name__ == '__main__':
-    #default host:
+    # default host:
     host = "localhost"
-    
+
     if len(sys.argv) > 1:
         helps = ['--help', 'help', '-h']
         for i in helps:
@@ -418,8 +408,8 @@ if __name__ == '__main__':
             host = sys.argv[1]
 
     print("Path root: %s" % path_root)
-    
-    #start the server loop
-    #reloader=True enables Auto Reloading
-    #run(app=server, host='localhost', port=port, reloader=True)
-    run(app=server, host=host, port=port, reloader=True)
+
+    # start the server loop
+    # reloader=True enables Auto Reloading
+    # bottle.run(app=server, host='localhost', port=port, reloader=True)
+    bottle.run(app=server, host=host, port=port, reloader=True)
