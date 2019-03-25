@@ -19,6 +19,8 @@ echo "Other common options:
 launch.py -c $ROOT todo
 launch.py -c $ROOT views
 
+launch.py -c /c/public/moments moments
+
 #terminal:
 cd web/
 python application.py

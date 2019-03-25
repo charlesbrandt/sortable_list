@@ -24,6 +24,7 @@
 
     <div class="modal" image-data="{{ image_data }}">
       <!-- modal -->
+      <!-- rendered by main.js file -->
     </div>
 
     %if content['path'].type() == "Image":
@@ -53,6 +54,5 @@
     %end
 
   </div>
-  
-</div>
 
+</div>

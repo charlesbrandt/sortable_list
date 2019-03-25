@@ -1,3 +1,13 @@
+frontend/node_modules
+# logs
+frontend/npm-debug.log
+
+# Nuxt build
+frontend/.nuxt
+
+# Nuxt generate
+frontend/dist
+
 *.elc
 *~
 *\#
@@ -8,6 +18,9 @@
 .Spotlight-V100*
 .fseventsd*
 *.pdf
+
+node/static/index.json
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,3 +1,11 @@
+*2018.03.03 07:21:12 nuxt
+/c/public/sortable_list/instances.txt
+/c/public/sortable_list/.gitignore
+/c/public/sortable_list/nuxt/pages/index.vue
+/c/public/sortable_list/nuxt/nuxt.config.js
+/c/public/sortable_list/nuxt/plugins/vue-sortable.js
+/c/public/sortable_list/nuxt/layouts/default.vue
+
 *2017.04.01 09:45:40 views
 /c/public/sortable_list/instances.txt
 /c/public/sortable_list/templates/navigation.tpl
