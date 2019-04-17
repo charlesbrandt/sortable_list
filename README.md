@@ -1,13 +1,14 @@
-# Sortable List
+# Sortable
 
+A collection of re-usable Python (server side) and Javascript (client side) components that assist with the task of manually sorting a collection of items.
 
-A collection of re-usable Python (server side) and Javascript (client side) components that assist with the task of manually sorting a list of items.
-
-## Goal:
+## Goal
 
 Sorting is useful in many different applications. Often considerable time goes in to recreating, re-engineering and re-implementing this task. This project aims to serve as a foundation for this style of interface when the need arises.
 
-## Overview:
+Arguably, the option to specify a manual order should be available for all types of collections.
+
+## Overview
 
 Most sorted lists can be distilled down to a textual representation where each item is on its own line in a file, and the items are sorted top to bottom. Having a textual representation is nice for manually editing the order directly in the text list. This also makes it easy to store the results of the sort operation.
 
@@ -22,6 +23,8 @@ http://bottlepy.org/docs/dev/index.html
 It also utilizes the excellent javascript "Sortable" library:
 
 https://rubaxa.github.io/Sortable/
+
+## References
 
 Loosely based on pose project from:
 
