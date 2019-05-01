@@ -1102,6 +1102,14 @@ class Image(File):
         to determine if those dimensions are generated
 
         save_original refers to original dimensions / ratios
+
+        moving call for
+                self.make_thumb_dirs(save_sizes)
+        outside of this function
+        can cause a race condition with Pooling
+        different threads may initialize the directory
+        resulting in directory already exists
+
         """
         # this is still big (maybe too big?)
         # but might shrink file size some?
@@ -1116,8 +1124,6 @@ class Image(File):
         # *2012.08.18 12:23:19
         # when rendering images for the web,
         # now it's a good idea to set dimensions to half the size
-
-        self.make_thumb_dirs(save_sizes)
 
         try:
             # image = PILImage.open(str(self.path))
@@ -1665,6 +1671,8 @@ class Directory(File):
         generate thumbnails for all images in this directory
         """
         self.scan_filetypes()
+
+        self.make_thumb_dirs(save_sizes)
 
         pool = Pool(8)
         results = pool.map(thumb_helper, self.images)
