@@ -2,8 +2,8 @@
 """
 #
 # By: Charles Brandt [code at charlesbrandt dot com]
-# On: [date]
-# License: MIT Copyright? Copyleft? Free/BSD/GPL/Open?
+# On: before 2019
+# License: MIT
 
 # Requires:
 #
@@ -18,8 +18,9 @@ import cProfile, pstats
 
 import os, sys, codecs
 import re
-from moments.path import Path, check_ignore
-from moments.sortable_list import SortableList
+#from moments.path import Path, check_ignore
+from sortable.path import Path, check_ignore
+from sortable.sortable_list import SortableList
 
 def usage():
     print(__doc__)

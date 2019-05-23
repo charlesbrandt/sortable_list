@@ -46,11 +46,12 @@ import sys
 import os
 import re
 
-from moments.path import Path
+#from moments.path import Path
+from sortable.path import Path
 from moments.launch import edit, file_browse
 from moments.timestamp import Timestamp
 
-from gaze import gaze
+from sortable.gaze import gaze
 
 import bottle
 # DO NOT USE THIS IN PRODUCTION!!

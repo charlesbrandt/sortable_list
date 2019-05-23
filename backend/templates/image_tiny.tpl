@@ -1,6 +1,7 @@
 %image = path.load()
 %image_path = image.size_path("medium")
 %if not image_path.exists():
+%   image.make_thumb_dirs(save_sizes=["medium"])
 %   image.make_thumbs()
 %end
 %small = image_path.load()
