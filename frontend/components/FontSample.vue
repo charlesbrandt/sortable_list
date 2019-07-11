@@ -28,7 +28,22 @@ export default {
   components: {
     // FontAwesomeIcon
   },
-  props: ['webfont', 'index', 'fontSize'],
+  // https://vuejs.org/v2/guide/components-props.html#Prop-Validation
+  props: {
+    webfont: {
+      type: Object,
+      default: function() {}
+    },
+    index: {
+      type: Number,
+      default: 0
+    },
+    fontSize: {
+      type: Number,
+      default: 12
+    }
+  },
+  // props: ['webfont', 'index', 'fontSize'],
   data() {
     return {}
   },

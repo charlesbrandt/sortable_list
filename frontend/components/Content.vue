@@ -21,7 +21,13 @@
 
 <script>
 export default {
-  props: ['item'],
+  // https://vuejs.org/v2/guide/components-props.html#Prop-Validation
+  props: {
+    item: {
+      type: Object,
+      default: function() {}
+    }
+  },
   computed: {
     // a computed getter
     imagePath: function() {
@@ -34,6 +40,8 @@ export default {
 
 <style>
 .content {
+  /*  https://stackoverflow.com/questions/15167545/how-to-crop-a-rectangular-image-into-a-square-with-css */
+  object-fit: cover;
   position: relative;
   text-align: left;
   display: inline-block;

@@ -1,6 +1,19 @@
 # Sortable
 
-A collection of re-usable Python (server side) and Javascript (client side) components that assist with the task of manually sorting a collection of items.
+A collection of re-usable Python (server side) and Javascript (client side) components that assist with manually sorting a group of items.
+
+## Cool, where do I begin?
+
+Clone this repository:
+
+     git clone https://github.com/charlesbrandt/sortable
+
+Then open a terminal:
+
+    cd /path/to/local/repo/sortable/frontend/
+    npm run dev
+
+(or yarn)
 
 ## Goal
 

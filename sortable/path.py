@@ -229,18 +229,22 @@ class Path(object):
             raise AttributeError("Need either path or parts")
 
         if path:
-            if path == ".":
-                # special case... this will not get parsed correctly without
-                # expanding it:
+            # this has unexpected consequences
+            # if not (re.match('^\.', path) or re.match('^\/', path)):
+            #     #assume it's a local path... update accordingly
+            #     path = "./" + path
+            #     print("Updated path", path)
+            #
+            #if path == ".":
+            if re.match('^\.', path):
+                # this will not get parsed correctly
+                # without expanding it:
                 path = os.path.abspath(path)
                 # print path
-                # path = os.path.abspath()
-            # self._dirname = path
+                #print("Expanded path", path)
+
             # could check if it is an actual path here
 
-            # *2012.12.06 05:25:14
-            # problems here with filesystem paths with special characters
-            # make sure not using str(path) anywhere else (walk, etc)
             self._dirname = str(path)
         else:
             self._dirname = self.from_parts(parts)
@@ -1167,44 +1171,55 @@ class Image(File):
                         large.thumbnail((l, l), PILImage.ANTIALIAS)
 
                         large.save(str(self.size_path('large', square=False)), "JPEG")
+                        large.close()
 
                     if save_square:
                         l_sq = square.copy()
                         l_sq.thumbnail((l, l), PILImage.ANTIALIAS)
 
                         l_sq.save(str(self.size_path('large')), "JPEG")
+                        l_sq.close()
 
                 if 'medium' in save_sizes:
                     if save_original:
                         medium = image.copy()
                         medium.thumbnail((m, m), PILImage.ANTIALIAS)
                         medium.save(str(self.size_path('medium', square=False)), "JPEG")
+                        medium.close()
+
                     if save_square:
                         m_sq = square.copy()
                         m_sq.thumbnail((m, m), PILImage.ANTIALIAS)
                         m_sq.save(str(self.size_path('medium')), "JPEG")
+                        m_sq.close()
 
                 if 'small' in save_sizes:
                     if save_original:
                         small = image.copy()
                         small.thumbnail((s, s), PILImage.ANTIALIAS)
                         small.save(str(self.size_path('small', square=False)), "JPEG")
+                        small.close()
 
                     if save_square:
                         s_sq = square.copy()
                         s_sq.thumbnail((s, s), PILImage.ANTIALIAS)
                         s_sq.save(str(self.size_path('small')), "JPEG")
+                        s_sq.close()
 
                 if 'tiny' in save_sizes:
                     if save_original:
                         tiny = image.copy()
                         tiny.thumbnail((t, t), PILImage.ANTIALIAS)
                         tiny.save(str(self.size_path('tiny', square=False)), "JPEG")
+                        tiny.close()
 
                     if save_square:
                         t_sq = square.copy()
                         t_sq.thumbnail((t, t), PILImage.ANTIALIAS)
                         t_sq.save(str(self.size_path('tiny')), "JPEG")
+                        t_sq.close()
+                        
+            image.close()
 
     ## def reset_stats(self):
     ##     """
@@ -1736,7 +1751,7 @@ class Directory(File):
 
         return sl
 
-    def default_image(self, pick_by=""):
+    def default_image(self, pick_by="", depth=0):
         """
         Not configured to work with RemoteJournal
         """
@@ -1781,10 +1796,12 @@ class Directory(File):
                 if ip.type() == "Image":
                     choice = ip
                 elif ip.type() == "Directory":
-                    sub_d = ip.load()
-                    sub_default = sub_d.default_image()
-                    if sub_default:
-                        choice = sub_default
+                    # don't recurse too far...
+                    if not depth >= 3:
+                        sub_d = ip.load()
+                        sub_default = sub_d.default_image(depth=depth+1)
+                        if sub_default:
+                            choice = sub_default
 
                 # # check if item in images
                 # image_index = 0
