@@ -35,7 +35,7 @@ http://bottlepy.org/docs/dev/index.html
 
 It also utilizes the excellent javascript "Sortable" library:
 
-https://rubaxa.github.io/Sortable/
+https://github.com/SortableJS/Sortable
 
 ## References
 
