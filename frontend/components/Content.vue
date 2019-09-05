@@ -25,12 +25,12 @@ export default {
   props: {
     item: {
       type: Object,
-      default: function() {}
+      default() {}
     }
   },
   computed: {
     // a computed getter
-    imagePath: function() {
+    imagePath() {
       // `this` points to the vm instance
       return 'http://localhost:8888/image/' + this.item.thumb
     }

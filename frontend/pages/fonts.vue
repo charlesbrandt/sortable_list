@@ -38,7 +38,7 @@ import FontSample from '~/components/FontSample.vue'
 function findFont(fontlist, name) {
   let i = fontlist.length
   while (i--) {
-    console.log('Checking: ', fontlist[i].family, ' vs. ', name)
+    // console.log('Checking: ', fontlist[i].family, ' vs. ', name)
     if (fontlist[i].family === name) {
       const match = fontlist.splice(i, 1)
       return match[0]
@@ -90,7 +90,7 @@ export default {
         .get(
           'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyBx7rQumhCDeLW9kdamvr82A6k3tA92a6Y'
         )
-        .then(response => {
+        .then((response) => {
           this.loading = false
           // console.log(response)
           // full set:
@@ -98,7 +98,7 @@ export default {
           // limited list:
           // this.fonts = response.data.items.slice(0, 10)
         })
-        .catch(error => {
+        .catch((error) => {
           this.error = error.toString()
         })
     },
@@ -134,7 +134,7 @@ export default {
         curname = names[i]
         // console.log("original fonts length: ", original_fonts.length)
         curfont = findFont(originalfonts, curname)
-        console.log(curfont)
+        // console.log(curfont)
         if (curfont) {
           this.fonts.push(curfont)
         }

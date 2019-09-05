@@ -143,14 +143,14 @@ def launch_path(source=''):
 #    return bottle.static_file(filename, root='/path/to/static/files', download=filename)
 
 
-@server.post('/save/<relative:path>')
+@server.route('/save/<relative:path>', method=['OPTIONS', 'POST'])
 @server.post('/save/')
 @server.post('/save')
 def save(relative=''):
     # debug:
     # print(dir(bottle.request.forms))
-    # print("Keys: %s" % (bottle.request.forms.keys()))
-    # print("Values: %s" % (bottle.request.forms.values()))
+    print("Keys: %s" % (bottle.request.forms.keys()))
+    print("Values: %s" % (bottle.request.forms.values()))
 
     global path_root
 
@@ -163,6 +163,7 @@ def save(relative=''):
     elif not re.match('/', relative):
         relative = path_root + relative
 
+    destination = None
     # destination = Path(relative, relative_prefix=path_root)
     # now check if the destination is a directory...
     # in that case, create a sortable.list name in the directory
@@ -193,39 +194,69 @@ def save(relative=''):
     # gets a string
     # could be json or text / list
     content = bottle.request.forms.get('content')
-    # print("CONTENT:")
-    # print(content)
-    # print()
+    print("CONTENT:")
+    print(content)
+    print()
+
+    ordered_list = content.split(',')
+    print("ORDERED:")
+    print(ordered_list)
+    print()
+    
 
     save_as = bottle.request.forms.get('format')
 
     if destination:
+        print("made it here")
+        print("Save as: ", save_as)
         if save_as in ["list"]:
-            dest_file = open(destination, 'w')
-            # print("opened: ", destination)
-            # print("writing (raw): ", content)
-            dest_file.write(content)
-            dest_file.close()
+
+            with open(destination, 'w') as dest_file:
+                dest_file = open(destination, 'w')
+                # print("opened: ", destination)
+                # print("writing (raw): ", content)
+
+                # this works if the whole list
+                # is already formatted as a text blob when sent from the client
+                # e.g. each line separated by a '\n' character
+                # dest_file.write(content)
+
+                # when sending the order as an actual json array,
+                # need to generate the text here:
+                for item in ordered_list:
+                    dest_file.write(item)
+                    dest_file.write('\n')
+                # dest_file.close()
             print("saved content to: ", destination)
 
+
+            # This is the only dependency on moments
+            # not sure if this functionality is worth the dependency
+            # could do something similar manually
+            # or maybe this isn't the best way to approach the problem
+            # essentially a bit of version control going on here
+            # but the size will continue to grow.
+            # might be a better way to track
+            # how directory contents and priorities change over time
+            
             # TODO:
             # check the .list.log file to see if today's entry already exists
-            log_path = Path(log_destination)
-            print("Log path: ", log_path)
-            if log_path.exists():
-                j = log_path.load_journal()
-            else:
-                j = log_path.load_journal(create=True)
-            now = Timestamp()
-            now.compact(accuracy='day')
-            entries = j.range(now)
-            print(entries)
-            if len(entries):
-                print("already had today logged")
-            else:
-                j.make(content, created=now)
-                j.save(log_path)
-                print("adding new entry")
+            ## log_path = Path(log_destination)
+            ## print("Log path: ", log_path)
+            ## if log_path.exists():
+            ##     j = log_path.load_journal()
+            ## else:
+            ##     j = log_path.load_journal(create=True)
+            ## now = Timestamp()
+            ## now.compact(accuracy='day')
+            ## entries = j.range(now)
+            ## print(entries)
+            ## if len(entries):
+            ##     print("already had today logged")
+            ## else:
+            ##     j.make(content, created=now)
+            ##     j.save(log_path)
+            ##     print("adding new entry")
 
 
 

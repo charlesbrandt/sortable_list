@@ -32,7 +32,7 @@ export default {
   props: {
     webfont: {
       type: Object,
-      default: function() {}
+      default() {}
     },
     index: {
       type: Number,
@@ -50,14 +50,14 @@ export default {
 
   computed: {
     // a computed getter
-    fontSource: function() {
+    fontSource() {
       // `this` points to the vm instance
       return (
         'https://fonts.googleapis.com/css?family=' +
         this.webfont.family.replace(' ', '+')
       )
     },
-    customStyle: function() {
+    customStyle() {
       const style =
         "font-family: '" +
         this.webfont.family +
